@@ -18,9 +18,9 @@ workflows:
     environment:
       flutter: stable
       java: 17
-    caching:
+    cache:
       cache_paths:
-        - $HOME/.pub-cache
+        - ~/.pub-cache
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
@@ -42,9 +42,9 @@ workflows:
     environment:
       flutter: stable
       java: 17
-    caching:
+    cache:
       cache_paths:
-        - $HOME/.pub-cache
+        - ~/.pub-cache
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
@@ -66,9 +66,9 @@ workflows:
     environment:
       flutter: stable
       java: 17
-    caching:
+    cache:
       cache_paths:
-        - $HOME/.pub-cache
+        - ~/.pub-cache
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
