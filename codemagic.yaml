@@ -1,8 +1,20 @@
+# Codemagic MUST use this file. In the app: Settings →
+# "I have a codemagic.yaml" (not the visual Workflow Editor).
+# Workflow Editor defaults to Android App Bundle (.aab) and ignores this file.
+# That is why a Mac mini M2 build can publish app-release.aab with no APK.
+
 workflows:
   android-debug-apk:
     name: Android debug APK
     instance_type: linux_x2
     max_build_duration: 30
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
     environment:
       flutter: stable
       java: 17
@@ -19,6 +31,7 @@ workflows:
       - name: Build APK
         script: |
           flutter build apk --debug
+          ls -la build/app/outputs/flutter-apk/
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
 
@@ -42,9 +55,25 @@ workflows:
       - name: Build APK
         script: |
           flutter build apk --release
+          ls -la build/app/outputs/flutter-apk/
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+
+  android-play-store-aab:
+    name: Android Play Store AAB
+    instance_type: linux_x2
+    max_build_duration: 30
+    environment:
+      flutter: stable
+      java: 17
+    caching:
+      cache_paths:
+        - $HOME/.pub-cache
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
       - name: Build AAB
         script: |
           flutter build appbundle --release
     artifacts:
-      - build/app/outputs/flutter-apk/*.apk
       - build/app/outputs/bundle/release/*.aab

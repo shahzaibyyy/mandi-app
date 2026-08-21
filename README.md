@@ -6,18 +6,20 @@ This project is set up so you **do not need Android Studio** on your laptop. Bui
 
 ## Build an APK on Codemagic
 
-`codemagic.yaml` at the repo root defines two workflows:
+Codemagic’s visual **Workflow Editor** builds an **.aab** by default (and also picks up `.aar` / `mapping.txt`). That is not this project’s YAML. If a finished build shows `app-release.aab` and no `.apk`, the app is still on Workflow Editor.
+
+1. Open the app in Codemagic → **Application settings**.
+2. Set configuration to **I have a `codemagic.yaml`** (not Workflow Editor).
+3. Start a new build and choose **Android debug APK** (Linux), not the default Flutter workflow on Mac mini M2.
+4. Download `app-debug.apk` from artifacts.
+
+YAML workflows:
 
 | Workflow | Artifact | Use |
 | --- | --- | --- |
-| **Android debug APK** | `app-debug.apk` | Daily testing, including Bluetooth printers |
-| **Android release APK** | `app-release.apk` | Sideload a release build (currently signed with the debug key) |
-
-1. Push this project to GitHub / GitLab / Bitbucket.
-2. In Codemagic, add the repository and select **codemagic.yaml**.
-3. Run **Android debug APK**.
-4. Download `app-debug.apk` from the build artifacts.
-5. Copy the APK to the phone and install it (allow “Install unknown apps” for your browser/files app).
+| **Android debug APK** | `app-debug.apk` | Daily testing, including Bluetooth printers (auto on push to `main`) |
+| **Android release APK** | `app-release.apk` | Sideload a release build |
+| **Android Play Store AAB** | `app-release.aab` | Play Store only — start this workflow manually |
 
 You do not need to run `flutter run` or install the Android SDK locally.
 
