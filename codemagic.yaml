@@ -16,10 +16,11 @@ workflows:
         script: flutter analyze
       - name: Test
         script: flutter test
-      - name: Build debug APK
-        script: flutter build apk --debug
+      - name: Build APK
+        script: |
+          flutter build apk --debug
     artifacts:
-      - build/app/outputs/flutter-apk/app-debug.apk
+      - build/app/outputs/flutter-apk/*.apk
 
   android-release-apk:
     name: Android release APK
@@ -38,7 +39,12 @@ workflows:
         script: flutter analyze
       - name: Test
         script: flutter test
-      - name: Build release APK
-        script: flutter build apk --release
+      - name: Build APK
+        script: |
+          flutter build apk --release
+      - name: Build AAB
+        script: |
+          flutter build appbundle --release
     artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/flutter-apk/*.apk
+      - build/app/outputs/bundle/release/*.aab
