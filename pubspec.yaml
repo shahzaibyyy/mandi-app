@@ -1,0 +1,35 @@
+name: mandi_fee_collector
+description: Offline Android app for Pakistani mandi fee collectors to issue and print Bluetooth thermal receipts.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  path_provider: ^2.1.6
+  flutter_riverpod: ^3.4.2
+  go_router: ^17.5.0
+  print_bluetooth_thermal: ^1.2.2
+  esc_pos_utils_plus: ^2.0.4
+  permission_handler: ^13.0.1
+  geolocator: ^14.0.3
+  intl: ^0.20.3
+  uuid: ^4.6.0
+  share_plus: ^13.3.0
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.16.0
+  # hive_generator 2.0.1 cannot resolve on Dart 3.13 (analyzer 8).
+  # Adapters live in lib/data/models/*.g.dart in the hive_generator format.
+
+flutter:
+  uses-material-design: true
