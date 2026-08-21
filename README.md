@@ -2,7 +2,15 @@
 
 Offline Android app for Pakistani mandi (market) fee collectors. Create entry-fee receipts, store them locally in Hive, and print on a paired Bluetooth ESC/POS thermal printer (58mm or 80mm). No backend, no cloud, no login.
 
-This project is set up so you **do not need Android Studio** on your laptop. Build the APK on [Codemagic](https://codemagic.io), download it, and install it on a phone to test printing.
+This project is set up so you **do not need Android Studio** on your laptop. Push to GitHub and download the APK from **Actions**.
+
+## Build an APK on GitHub Actions (free)
+
+1. Push to `main` (or run **Actions → Build APK → Run workflow**).
+2. Open the completed run → **Artifacts** → download **app-release-apk**.
+3. Unzip it and install `app-release.apk` on the phone (allow “Install unknown apps”).
+
+The workflow is `.github/workflows/build-apk.yml`.
 
 ## Build an APK on Codemagic
 
