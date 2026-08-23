@@ -43,10 +43,16 @@ class UrduReceiptPreview extends StatelessWidget {
             children: [
               Image.asset(AppConstants.logoAsset, width: 96),
               const SizedBox(height: 8),
-              Text(
-                company,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  company,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                  ),
+                ),
               ),
               const SizedBox(height: 12),
               _kv('ٹاؤن', cityDistrict ?? '-'),
@@ -58,14 +64,15 @@ class UrduReceiptPreview extends StatelessWidget {
                     : '-',
               ),
               _kv('نام آپریٹر', receipt.receiverName),
-              const SizedBox(height: 8),
-              Text(
-                'رسید نمبر ${receipt.receiptNumber}',
-                textAlign: TextAlign.center,
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text('----------------'),
               ),
-              Text(
-                'تاریخ و وقت ${DateFormatter.receiptPrintDateTime(receipt.createdAt)}',
-                textAlign: TextAlign.center,
+              _stackedCenter('رسید نمبر', receipt.receiptNumber),
+              const SizedBox(height: 6),
+              _stackedCenter(
+                'تاریخ و وقت',
+                DateFormatter.receiptPrintDateTime(receipt.createdAt),
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 8),
@@ -96,7 +103,7 @@ class UrduReceiptPreview extends StatelessWidget {
                 bold: true,
               ),
               const Text('----------------'),
-              Text('جاری کردہ توسط ${receipt.receiverName}'),
+              _stackedCenter('جاری کردہ توسط', receipt.receiverName),
               const SizedBox(height: 6),
               Text(
                 receipt.isPaid ? 'ادا شدہ' : 'غیر ادا شدہ',
@@ -126,9 +133,30 @@ class UrduReceiptPreview extends StatelessWidget {
   Widget _kv(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Text('$label: $value'),
+      child: Row(
+        children: [
+          Text(label),
+          const Spacer(),
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(value, textAlign: TextAlign.left),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _stackedCenter(String label, String value) {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        children: [
+          Text(label, textAlign: TextAlign.center),
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(value, textAlign: TextAlign.center),
+          ),
+        ],
       ),
     );
   }

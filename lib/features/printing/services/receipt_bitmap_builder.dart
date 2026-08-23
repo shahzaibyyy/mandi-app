@@ -43,7 +43,7 @@ class ReceiptBitmapBuilder {
     final company = (companyHeaderName != null && companyHeaderName.isNotEmpty)
         ? companyHeaderName
         : settings.companyHeaderName;
-    y = _center(canvas, company, y, widthPx, size: 15, bold: true);
+    y = _right(canvas, company, y, widthPx, size: 15, bold: true);
     y += 10;
 
     y = _kv(canvas, 'ٹاؤن', marketCityDistrict ?? '', y, widthPx);
@@ -58,14 +58,23 @@ class ReceiptBitmapBuilder {
       widthPx,
     );
     y = _kv(canvas, 'نام آپریٹر', receipt.receiverName, y, widthPx);
-    y += 8;
-
-    y = _center(canvas, 'رسید نمبر ${receipt.receiptNumber}', y, widthPx);
+    y = _dash(canvas, y, widthPx);
+    y = _center(canvas, 'رسید نمبر', y, widthPx);
     y = _center(
       canvas,
-      'تاریخ و وقت ${DateFormatter.receiptPrintDateTime(receipt.createdAt)}',
+      receipt.receiptNumber,
       y,
       widthPx,
+      ltr: true,
+    );
+    y += 4;
+    y = _center(canvas, 'تاریخ و وقت', y, widthPx);
+    y = _center(
+      canvas,
+      DateFormatter.receiptPrintDateTime(receipt.createdAt),
+      y,
+      widthPx,
+      ltr: true,
     );
     y = _dash(canvas, y, widthPx);
     y = _center(canvas, 'فیس رسید', y, widthPx, bold: true);
@@ -103,7 +112,8 @@ class ReceiptBitmapBuilder {
     );
     y = _dash(canvas, y, widthPx);
 
-    y = _center(canvas, 'جاری کردہ توسط ${receipt.receiverName}', y, widthPx);
+    y = _center(canvas, 'جاری کردہ توسط', y, widthPx);
+    y = _center(canvas, receipt.receiverName, y, widthPx, ltr: true);
     y += 4;
     y = _center(
       canvas,
@@ -153,25 +163,56 @@ class ReceiptBitmapBuilder {
     int width, {
     double size = 13,
     bool bold = false,
+    bool ltr = false,
   }) {
     final painter = _painter(
       text,
       size: size,
       bold: bold,
       align: TextAlign.center,
+      ltr: ltr,
     )..layout(maxWidth: width - 16);
     painter.paint(canvas, Offset((width - painter.width) / 2, y));
     return y + painter.height + 3;
   }
 
-  double _kv(Canvas canvas, String label, String value, double y, int width) {
+  double _right(
+    Canvas canvas,
+    String text,
+    double y,
+    int width, {
+    double size = 13,
+    bool bold = false,
+  }) {
     final painter = _painter(
-      '$label: $value',
-      size: 13,
+      text,
+      size: size,
+      bold: bold,
       align: TextAlign.right,
     )..layout(maxWidth: width - 16);
     painter.paint(canvas, Offset(width - 8 - painter.width, y));
     return y + painter.height + 3;
+  }
+
+  double _kv(Canvas canvas, String label, String value, double y, int width) {
+    final labelPainter = _painter(
+      label,
+      size: 13,
+      align: TextAlign.right,
+    )..layout();
+    final valuePainter = _painter(
+      value,
+      size: 13,
+      align: TextAlign.left,
+      ltr: true,
+    )..layout(maxWidth: width - labelPainter.width - 24);
+    valuePainter.paint(canvas, Offset(8, y));
+    labelPainter.paint(canvas, Offset(width - 8 - labelPainter.width, y));
+    return y +
+        (labelPainter.height > valuePainter.height
+            ? labelPainter.height
+            : valuePainter.height) +
+        3;
   }
 
   double _tableHeader(Canvas canvas, double y, int width) {
@@ -241,8 +282,13 @@ class ReceiptBitmapBuilder {
     required String value,
     bool bold = false,
   }) {
-    final valuePainter = _painter(value, size: 14, bold: bold, align: TextAlign.left)
-      ..layout();
+    final valuePainter = _painter(
+      value,
+      size: 14,
+      bold: bold,
+      align: TextAlign.left,
+      ltr: true,
+    )..layout();
     final labelPainter = _painter(label, size: 14, bold: bold, align: TextAlign.right)
       ..layout();
     valuePainter.paint(canvas, Offset(8, y));
@@ -282,6 +328,7 @@ class ReceiptBitmapBuilder {
     required double size,
     bool bold = false,
     required TextAlign align,
+    bool ltr = false,
   }) {
     return TextPainter(
       text: TextSpan(
@@ -293,7 +340,7 @@ class ReceiptBitmapBuilder {
           height: 1.25,
         ),
       ),
-      textDirection: TextDirection.rtl,
+      textDirection: ltr ? TextDirection.ltr : TextDirection.rtl,
       textAlign: align,
     );
   }
