@@ -12,44 +12,43 @@ class ReceiptShareFormatter {
     required AppSettings settings,
     String? cityDistrict,
   }) {
+    final whatsapp = (settings.whatsappNumber?.trim().isNotEmpty == true)
+        ? settings.whatsappNumber!.trim()
+        : AppConstants.defaultWhatsappNumber;
+    final gps = (receipt.latitude != null && receipt.longitude != null)
+        ? '${receipt.latitude!.toStringAsFixed(6)}, ${receipt.longitude!.toStringAsFixed(6)}'
+        : '-';
     final buffer = StringBuffer()
       ..writeln(settings.companyHeaderName)
-      ..writeln('MARKET FEE RECEIPT')
-      ..writeln('Mandi: ${receipt.marketNameSnapshot}');
-    if (cityDistrict != null && cityDistrict.isNotEmpty) {
-      buffer.writeln('City/District: $cityDistrict');
-    }
-    buffer.writeln('Receiver: ${receipt.receiverName}');
-    if (receipt.contractorName != null &&
-        receipt.contractorName!.trim().isNotEmpty) {
-      buffer.writeln('Contractor: ${receipt.contractorName}');
-    }
-    buffer
-      ..writeln('Receipt No: ${receipt.receiptNumber}')
-      ..writeln('Date: ${DateFormatter.receiptDateTime(receipt.createdAt)}')
-      ..writeln('---');
+      ..writeln('ٹاؤن: ${cityDistrict ?? '-'}')
+      ..writeln('مارکیٹ: ${receipt.marketNameSnapshot}')
+      ..writeln(
+        'نام ٹھیکیدار: ${receipt.contractorName?.trim().isNotEmpty == true ? receipt.contractorName : '-'}',
+      )
+      ..writeln('نام آپریٹر: ${receipt.receiverName}')
+      ..writeln('رسید نمبر ${receipt.receiptNumber}')
+      ..writeln(
+        'تاریخ و وقت ${DateFormatter.receiptPrintDateTime(receipt.createdAt)}',
+      )
+      ..writeln('----------------')
+      ..writeln('فیس رسید');
     for (final item in receipt.lineItems) {
       buffer.writeln(
-        '${item.feeTypeName}  ${CurrencyFormatter.plain(item.quantity)} x ${CurrencyFormatter.format(item.unitRate)} = ${CurrencyFormatter.format(item.amount)}',
+        '${item.feeTypeName}  ${CurrencyFormatter.receipt(item.quantity)}  ${CurrencyFormatter.receipt(item.unitRate)}  ${CurrencyFormatter.receipt(item.amount)}',
       );
     }
     buffer
-      ..writeln('Subtotal: ${CurrencyFormatter.format(receipt.subtotal)}')
       ..writeln(
-        'PST ${CurrencyFormatter.plain(receipt.taxPercent)}%: ${CurrencyFormatter.format(receipt.taxAmount)}',
+        'PST(${CurrencyFormatter.receipt(receipt.taxPercent)}%)  ${CurrencyFormatter.receipt(receipt.taxAmount)}',
       )
-      ..writeln('TOTAL: ${CurrencyFormatter.format(receipt.totalAmount)}')
-      ..writeln('Status: ${receipt.isPaid ? 'PAID' : 'UNPAID'}');
-    final phone = settings.whatsappNumber?.trim();
-    if (phone != null && phone.isNotEmpty) {
-      buffer.writeln('Phone/WhatsApp: $phone');
-    }
-    if (receipt.latitude != null && receipt.longitude != null) {
-      buffer.writeln(
-        'GPS: ${receipt.latitude!.toStringAsFixed(6)}, ${receipt.longitude!.toStringAsFixed(6)}',
-      );
-    }
-    buffer.writeln('${AppConstants.appName} v${AppConstants.appVersion}');
+      ..writeln('کل  ${CurrencyFormatter.receipt(receipt.totalAmount)}')
+      ..writeln('جاری کردہ توسط ${receipt.receiverName}')
+      ..writeln(receipt.isPaid ? 'ادا شدہ' : 'غیر ادا شدہ')
+      ..writeln('ہیلپ لائن: ${AppConstants.helplineNumber}')
+      ..writeln('واٹس ایپ: $whatsapp')
+      ..writeln('GPS مقام: $gps')
+      ..writeln('شکریہ')
+      ..writeln(AppConstants.poweredBy);
     return buffer.toString();
   }
 }

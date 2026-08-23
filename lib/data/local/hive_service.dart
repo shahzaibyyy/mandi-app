@@ -43,6 +43,20 @@ class HiveService {
 
     if (settingsBox.get(AppConstants.settingsKey) == null) {
       await settingsBox.put(AppConstants.settingsKey, AppSettings.defaults());
+    } else {
+      final current = settingsBox.get(AppConstants.settingsKey)!;
+      var changed = false;
+      if (current.companyHeaderName == 'Market Committee') {
+        current.companyHeaderName = AppConstants.defaultCompanyHeader;
+        changed = true;
+      }
+      if (current.whatsappNumber == null || current.whatsappNumber!.isEmpty) {
+        current.whatsappNumber = AppConstants.defaultWhatsappNumber;
+        changed = true;
+      }
+      if (changed) {
+        await settingsBox.put(AppConstants.settingsKey, current);
+      }
     }
   }
 }

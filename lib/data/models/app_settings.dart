@@ -26,6 +26,7 @@ class AppSettings extends HiveObject {
       receiptNumberPrefix: AppConstants.receiptNumberPrefix,
       lastReceiptSequence: 0,
       paperWidthMm: AppConstants.defaultPaperWidthMm,
+      whatsappNumber: AppConstants.defaultWhatsappNumber,
     );
   }
 

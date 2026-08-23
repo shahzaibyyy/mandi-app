@@ -12,8 +12,16 @@ class CurrencyFormatter {
   );
 
   static final NumberFormat _plain = NumberFormat('#,##0.00', 'en_PK');
+  static final NumberFormat _receipt = NumberFormat('#,##0', 'en_PK');
 
   static String format(num value) => _format.format(value);
 
   static String plain(num value) => _plain.format(value);
+
+  static String receipt(num value) {
+    if (value == value.roundToDouble()) {
+      return _receipt.format(value);
+    }
+    return _plain.format(value);
+  }
 }
