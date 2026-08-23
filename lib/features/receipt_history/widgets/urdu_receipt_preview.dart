@@ -41,7 +41,7 @@ class UrduReceiptPreview extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
           child: Column(
             children: [
-              Image.asset(AppConstants.logoAsset, width: 72, height: 72),
+              Image.asset(AppConstants.logoAsset, width: 96),
               const SizedBox(height: 8),
               Text(
                 company,

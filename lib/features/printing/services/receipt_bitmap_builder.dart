@@ -28,15 +28,16 @@ class ReceiptBitmapBuilder {
     var y = 8.0;
     final logo = await _logo();
     if (logo != null) {
-      const logoSize = 72.0;
-      final dx = (widthPx - logoSize) / 2;
+      const logoW = 96.0;
+      final logoH = logoW * logo.height / logo.width;
+      final dx = (widthPx - logoW) / 2;
       canvas.drawImageRect(
         logo,
         Rect.fromLTWH(0, 0, logo.width.toDouble(), logo.height.toDouble()),
-        Rect.fromLTWH(dx, y, logoSize, logoSize),
+        Rect.fromLTWH(dx, y, logoW, logoH),
         Paint(),
       );
-      y += logoSize + 8;
+      y += logoH + 8;
     }
 
     final company = (companyHeaderName != null && companyHeaderName.isNotEmpty)
