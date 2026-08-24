@@ -86,7 +86,7 @@ class ReceiptBitmapBuilder {
       ltr: true,
     );
     y = _dash(canvas, y, widthPx);
-    y = _center(canvas, AppConstants.labelFeeReceipt, y, widthPx, bold: true);
+    y = _center(canvas, AppConstants.labelFeeReceipt, y, widthPx);
     y += 4;
 
     y = _tableHeader(canvas, y, widthPx);
@@ -152,7 +152,7 @@ class ReceiptBitmapBuilder {
     y = _contact(canvas, AppConstants.labelWhatsapp, whatsapp, y, widthPx);
     y = _contact(canvas, AppConstants.labelGps, gps, y, widthPx);
     y += 6;
-    y = _center(canvas, AppConstants.labelThanks, y, widthPx, bold: true);
+    y = _center(canvas, AppConstants.labelThanks, y, widthPx);
     y = _center(canvas, AppConstants.poweredBy, y, widthPx, size: _powered);
     y += 12;
 
@@ -241,7 +241,6 @@ class ReceiptBitmapBuilder {
       qty: 'تعداد',
       rate: 'یونٹ',
       amount: 'قیمت',
-      bold: true,
     );
   }
 
@@ -326,12 +325,12 @@ class ReceiptBitmapBuilder {
   double _dash(Canvas canvas, double y, int width) {
     y += 6;
     final glyph = TextPainter(
-      text: const TextSpan(
+      text: TextSpan(
         text: '-',
         style: TextStyle(
           color: Colors.black,
           fontSize: _body,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w400,
           height: 1,
           letterSpacing: -0.4,
         ),
@@ -343,10 +342,10 @@ class ReceiptBitmapBuilder {
     final painter = TextPainter(
       text: TextSpan(
         text: '-' * count,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.black,
           fontSize: _body,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w400,
           height: 1,
           letterSpacing: -0.4,
         ),
@@ -371,7 +370,7 @@ class ReceiptBitmapBuilder {
         style: TextStyle(
           color: Colors.black,
           fontSize: size,
-          fontWeight: bold ? FontWeight.w900 : FontWeight.w600,
+          fontWeight: bold ? FontWeight.w900 : FontWeight.w400,
           height: 1.25,
         ),
       ),
