@@ -69,7 +69,7 @@ class _AddEditMarketScreenState extends ConsumerState<AddEditMarketScreen> {
             ),
             const SizedBox(height: 12),
             AppTextField(
-              label: 'City / District',
+              label: 'Division',
               controller: _city,
               requiredField: true,
               hintText: 'e.g. Lahore',

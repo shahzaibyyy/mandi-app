@@ -22,4 +22,21 @@ class AppConstants {
   static const String defaultWhatsappNumber = '+92 323 1233000';
   static const String poweredBy = 'Powered by PCMMDC';
   static const String logoAsset = 'assets/images/pcmmdc_logo.png';
+
+  static const String receiptDashLine = '----------------';
+  static const String labelDivision = 'ڈویژن';
+  static const String labelMarket = 'مارکیٹ';
+  static const String labelContractor = 'نام ٹھیکیدار';
+  static const String labelOperator = 'نام آپریٹر';
+  static const String labelReceiptNo = 'رسید نمبر';
+  static const String labelDateTime = 'تاریخ و وقت';
+  static const String labelFeeReceipt = 'فیس رسید';
+  static const String labelIssuedBy = 'جاری کردہ توسط';
+  static const String labelPaid = 'ادا شدہ';
+  static const String labelUnpaid = 'غیر ادا شدہ';
+  static const String labelHelpline = 'ہیلپ لائن';
+  static const String labelWhatsapp = 'واٹس ایپ';
+  static const String labelGps = 'GPS مقام';
+  static const String labelThanks = 'شکریہ';
+  static const String labelTotal = 'کل';
 }

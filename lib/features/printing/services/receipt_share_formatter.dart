@@ -20,18 +20,18 @@ class ReceiptShareFormatter {
         : '-';
     final buffer = StringBuffer()
       ..writeln(settings.companyHeaderName)
-      ..writeln('ٹاؤن: ${cityDistrict ?? '-'}')
-      ..writeln('مارکیٹ: ${receipt.marketNameSnapshot}')
+      ..writeln('${AppConstants.labelDivision}: ${cityDistrict ?? '-'}')
+      ..writeln('${AppConstants.labelMarket}: ${receipt.marketNameSnapshot}')
       ..writeln(
-        'نام ٹھیکیدار: ${receipt.contractorName?.trim().isNotEmpty == true ? receipt.contractorName : '-'}',
+        '${AppConstants.labelContractor}: ${receipt.contractorName?.trim().isNotEmpty == true ? receipt.contractorName : '-'}',
       )
-      ..writeln('نام آپریٹر: ${receipt.receiverName}')
-      ..writeln('رسید نمبر ${receipt.receiptNumber}')
+      ..writeln('${AppConstants.labelOperator}: ${receipt.receiverName}')
+      ..writeln('${AppConstants.labelReceiptNo} ${receipt.receiptNumber}')
       ..writeln(
-        'تاریخ و وقت ${DateFormatter.receiptPrintDateTime(receipt.createdAt)}',
+        '${AppConstants.labelDateTime} ${DateFormatter.receiptPrintDateTime(receipt.createdAt)}',
       )
-      ..writeln('----------------')
-      ..writeln('فیس رسید');
+      ..writeln(AppConstants.receiptDashLine)
+      ..writeln(AppConstants.labelFeeReceipt);
     for (final item in receipt.lineItems) {
       buffer.writeln(
         '${item.feeTypeName}  ${CurrencyFormatter.receipt(item.quantity)}  ${CurrencyFormatter.receipt(item.unitRate)}  ${CurrencyFormatter.receipt(item.amount)}',
@@ -41,13 +41,13 @@ class ReceiptShareFormatter {
       ..writeln(
         'PST(${CurrencyFormatter.receipt(receipt.taxPercent)}%)  ${CurrencyFormatter.receipt(receipt.taxAmount)}',
       )
-      ..writeln('کل  ${CurrencyFormatter.receipt(receipt.totalAmount)}')
-      ..writeln('جاری کردہ توسط ${receipt.receiverName}')
-      ..writeln(receipt.isPaid ? 'ادا شدہ' : 'غیر ادا شدہ')
-      ..writeln('ہیلپ لائن: ${AppConstants.helplineNumber}')
-      ..writeln('واٹس ایپ: $whatsapp')
-      ..writeln('GPS مقام: $gps')
-      ..writeln('شکریہ')
+      ..writeln('${AppConstants.labelTotal}  ${CurrencyFormatter.receipt(receipt.totalAmount)}')
+      ..writeln('${AppConstants.labelIssuedBy} ${receipt.receiverName}')
+      ..writeln(receipt.isPaid ? AppConstants.labelPaid : AppConstants.labelUnpaid)
+      ..writeln('${AppConstants.labelHelpline} : ${AppConstants.helplineNumber}')
+      ..writeln('${AppConstants.labelWhatsapp} : $whatsapp')
+      ..writeln('${AppConstants.labelGps} : $gps')
+      ..writeln(AppConstants.labelThanks)
       ..writeln(AppConstants.poweredBy);
     return buffer.toString();
   }
