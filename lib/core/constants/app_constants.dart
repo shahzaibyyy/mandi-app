@@ -23,7 +23,7 @@ class AppConstants {
   static const String poweredBy = 'Powered by PCMMDC';
   static const String logoAsset = 'assets/images/pcmmdc_logo.png';
 
-  static const String receiptDashLine = '----------------';
+  static const String receiptDashLine = '--------------------------------';
   static const String labelDivision = 'ڈویژن';
   static const String labelMarket = 'مارکیٹ';
   static const String labelContractor = 'نام ٹھیکیدار';

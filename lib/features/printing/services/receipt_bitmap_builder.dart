@@ -11,13 +11,13 @@ import '../../../data/models/receipt.dart';
 
 /// Renders the PCMMDC-style Urdu thermal receipt as a PNG.
 class ReceiptBitmapBuilder {
-  static const _body = 13.5;
-  static const _company = 15.5;
-  static const _table = 12.5;
-  static const _summary = 14.5;
-  static const _issuedName = 18.5;
-  static const _paid = 24.5;
-  static const _powered = 12.5;
+  static const _body = 14.5;
+  static const _company = 16.5;
+  static const _table = 13.5;
+  static const _summary = 15.5;
+  static const _issuedName = 20.5;
+  static const _paid = 26.5;
+  static const _powered = 13.5;
   static const _edge = 4.0;
 
   Future<Uint8List> buildPng({
@@ -324,14 +324,38 @@ class ReceiptBitmapBuilder {
   }
 
   double _dash(Canvas canvas, double y, int width) {
-    return _center(
-      canvas,
-      AppConstants.receiptDashLine,
-      y + 2,
-      width,
-      size: _body,
-      gap: 4,
-    );
+    y += 6;
+    final glyph = TextPainter(
+      text: const TextSpan(
+        text: '-',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: _body,
+          fontWeight: FontWeight.w900,
+          height: 1,
+          letterSpacing: -0.4,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    final usable = width - _edge * 2;
+    final count = (usable / glyph.width).floor().clamp(16, 80);
+    final painter = TextPainter(
+      text: TextSpan(
+        text: '-' * count,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: _body,
+          fontWeight: FontWeight.w900,
+          height: 1,
+          letterSpacing: -0.4,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: usable);
+    painter.paint(canvas, Offset((width - painter.width) / 2, y));
+    return y + painter.height + 6;
   }
 
   TextPainter _painter(
@@ -347,7 +371,7 @@ class ReceiptBitmapBuilder {
         style: TextStyle(
           color: Colors.black,
           fontSize: size,
-          fontWeight: bold ? FontWeight.w900 : FontWeight.w500,
+          fontWeight: bold ? FontWeight.w900 : FontWeight.w600,
           height: 1.25,
         ),
       ),

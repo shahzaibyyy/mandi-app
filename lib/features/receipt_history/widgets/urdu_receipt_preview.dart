@@ -21,11 +21,12 @@ class UrduReceiptPreview extends StatelessWidget {
   final String? cityDistrict;
   final String? companyHeaderName;
 
-  static const _body = 13.5;
-  static const _company = 15.5;
-  static const _table = 12.5;
-  static const _issuedName = 18.5;
-  static const _paid = 24.5;
+  static const _body = 14.5;
+  static const _company = 16.5;
+  static const _table = 13.5;
+  static const _summarySize = 15.5;
+  static const _issuedName = 20.5;
+  static const _paid = 26.5;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,11 @@ class UrduReceiptPreview extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
           child: DefaultTextStyle.merge(
-            style: const TextStyle(fontSize: _body, height: 1.25),
+            style: const TextStyle(
+              fontSize: _body,
+              height: 1.25,
+              fontWeight: FontWeight.w600,
+            ),
             child: Column(
               children: [
                 Image.asset(AppConstants.logoAsset, width: 96),
@@ -55,7 +60,7 @@ class UrduReceiptPreview extends StatelessWidget {
                   company,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w900,
                     fontSize: _company,
                   ),
                 ),
@@ -79,7 +84,7 @@ class UrduReceiptPreview extends StatelessWidget {
                 _dash(),
                 const Text(
                   AppConstants.labelFeeReceipt,
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: _body),
                 ),
                 const SizedBox(height: 6),
                 _tableRow('فیس کی قسم', 'تعداد', 'یونٹ', 'قیمت', header: true),
@@ -126,7 +131,7 @@ class UrduReceiptPreview extends StatelessWidget {
                 const SizedBox(height: 8),
                 const Text(
                   AppConstants.labelThanks,
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: _body),
                 ),
                 const Text(AppConstants.poweredBy),
               ],
@@ -138,9 +143,36 @@ class UrduReceiptPreview extends StatelessWidget {
   }
 
   Widget _dash() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 6),
-      child: Text(AppConstants.receiptDashLine),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: SizedBox(
+        width: double.infinity,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            const style = TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: _body,
+              height: 1,
+              letterSpacing: -0.4,
+            );
+            final painter = TextPainter(
+              text: const TextSpan(text: '-', style: style),
+              textDirection: TextDirection.ltr,
+            )..layout();
+            final count = (constraints.maxWidth / painter.width).floor().clamp(
+              16,
+              80,
+            );
+            return Text(
+              '-' * count,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+              textAlign: TextAlign.center,
+              style: style,
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -202,7 +234,7 @@ class UrduReceiptPreview extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: valueSize ?? _body,
-                fontWeight: valueBold ? FontWeight.w900 : FontWeight.w500,
+                fontWeight: valueBold ? FontWeight.w900 : FontWeight.w600,
               ),
             ),
           ),
@@ -219,7 +251,7 @@ class UrduReceiptPreview extends StatelessWidget {
     bool header = false,
   }) {
     final style = TextStyle(
-      fontWeight: header ? FontWeight.w800 : FontWeight.w500,
+      fontWeight: header ? FontWeight.w900 : FontWeight.w600,
       fontSize: _table,
     );
     return Padding(
@@ -243,8 +275,8 @@ class UrduReceiptPreview extends StatelessWidget {
 
   Widget _summary(String label, String value, {bool bold = false}) {
     final style = TextStyle(
-      fontWeight: bold ? FontWeight.w800 : FontWeight.w600,
-      fontSize: 14.5,
+      fontWeight: bold ? FontWeight.w900 : FontWeight.w700,
+      fontSize: _summarySize,
     );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
