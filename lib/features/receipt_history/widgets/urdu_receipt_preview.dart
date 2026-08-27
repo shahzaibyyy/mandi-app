@@ -21,12 +21,12 @@ class UrduReceiptPreview extends StatelessWidget {
   final String? cityDistrict;
   final String? companyHeaderName;
 
-  static const _body = 14.5;
-  static const _company = 16.5;
-  static const _table = 13.5;
-  static const _summarySize = 15.5;
-  static const _issuedName = 20.5;
-  static const _paid = 26.5;
+  static const _body = 18.0;
+  static const _company = 21.0;
+  static const _table = 16.0;
+  static const _summarySize = 19.0;
+  static const _issuedName = 26.0;
+  static const _paid = 32.0;
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +49,12 @@ class UrduReceiptPreview extends StatelessWidget {
           child: DefaultTextStyle.merge(
             style: const TextStyle(
               fontSize: _body,
-              height: 1.25,
+              height: 1.35,
               fontWeight: FontWeight.w400,
             ),
             child: Column(
               children: [
-                Image.asset(AppConstants.logoAsset, width: 96),
+                Image.asset(AppConstants.logoAsset, width: 112),
                 const SizedBox(height: 8),
                 Text(
                   company,

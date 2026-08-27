@@ -11,13 +11,13 @@ import '../../../data/models/receipt.dart';
 
 /// Renders the PCMMDC-style Urdu thermal receipt as a PNG.
 class ReceiptBitmapBuilder {
-  static const _body = 14.5;
-  static const _company = 16.5;
-  static const _table = 13.5;
-  static const _summary = 15.5;
-  static const _issuedName = 20.5;
-  static const _paid = 26.5;
-  static const _footer = 14.5;
+  static const _body = 18.0;
+  static const _company = 21.0;
+  static const _table = 16.0;
+  static const _summary = 19.0;
+  static const _issuedName = 26.0;
+  static const _paid = 32.0;
+  static const _footer = 16.0;
   static const _edge = 4.0;
 
   Future<Uint8List> buildPng({
@@ -37,7 +37,7 @@ class ReceiptBitmapBuilder {
     var y = 8.0;
     final logo = await _logo();
     if (logo != null) {
-      const logoW = 96.0;
+      const logoW = 112.0;
       final logoH = logoW * logo.height / logo.width;
       final dx = (widthPx - logoW) / 2;
       canvas.drawImageRect(
@@ -46,14 +46,14 @@ class ReceiptBitmapBuilder {
         Rect.fromLTWH(dx, y, logoW, logoH),
         Paint(),
       );
-      y += logoH + 8;
+      y += logoH + 10;
     }
 
     final company = (companyHeaderName != null && companyHeaderName.isNotEmpty)
         ? companyHeaderName
         : settings.companyHeaderName;
     y = _center(canvas, company, y, widthPx, size: _company, bold: true);
-    y += 8;
+    y += 10;
 
     y = _kv(canvas, AppConstants.labelDivision, marketCityDistrict ?? '', y, widthPx);
     y = _kv(canvas, AppConstants.labelMarket, receipt.marketNameSnapshot, y, widthPx);
@@ -67,7 +67,7 @@ class ReceiptBitmapBuilder {
       widthPx,
     );
     y = _kv(canvas, AppConstants.labelOperator, receipt.receiverName, y, widthPx);
-    y += 6;
+    y += 8;
     y = _center(canvas, AppConstants.labelReceiptNo, y, widthPx, bold: true);
     y = _center(
       canvas,
@@ -77,7 +77,7 @@ class ReceiptBitmapBuilder {
       bold: true,
       ltr: true,
     );
-    y += 4;
+    y += 6;
     y = _center(canvas, AppConstants.labelDateTime, y, widthPx, bold: true);
     y = _center(
       canvas,
@@ -87,9 +87,9 @@ class ReceiptBitmapBuilder {
       bold: true,
       ltr: true,
     );
-    y += 6;
+    y += 8;
     y = _center(canvas, AppConstants.labelFeeReceipt, y, widthPx, bold: true);
-    y += 4;
+    y += 6;
 
     y = _tableHeader(canvas, y, widthPx);
     for (final item in receipt.lineItems) {
@@ -133,7 +133,7 @@ class ReceiptBitmapBuilder {
       bold: true,
       ltr: _isLatin(receipt.receiverName),
     );
-    y += 4;
+    y += 6;
     y = _center(
       canvas,
       receipt.isPaid ? AppConstants.labelPaid : AppConstants.labelUnpaid,
@@ -142,7 +142,7 @@ class ReceiptBitmapBuilder {
       size: _paid,
       bold: true,
     );
-    y += 10;
+    y += 12;
 
     final whatsapp = (settings.whatsappNumber?.trim().isNotEmpty == true)
         ? settings.whatsappNumber!.trim()
@@ -153,11 +153,11 @@ class ReceiptBitmapBuilder {
     y = _contact(canvas, AppConstants.labelHelpline, AppConstants.helplineNumber, y, widthPx);
     y = _contact(canvas, AppConstants.labelWhatsapp, whatsapp, y, widthPx);
     y = _contact(canvas, AppConstants.labelGps, gps, y, widthPx);
-    y += 8;
+    y += 10;
     y = _center(canvas, AppConstants.labelThanks, y, widthPx, size: _footer);
-    y += 4;
+    y += 6;
     y = _poweredBy(canvas, y, widthPx);
-    y += 14;
+    y += 16;
 
     final picture = recorder.endRecording();
     final image = await picture.toImage(widthPx, y.ceil());
@@ -184,7 +184,7 @@ class ReceiptBitmapBuilder {
     double size = _body,
     bool bold = false,
     bool ltr = false,
-    double gap = 3,
+    double gap = 5,
   }) {
     final painter = _painter(
       text,
@@ -218,7 +218,7 @@ class ReceiptBitmapBuilder {
         (labelPainter.height > valuePainter.height
             ? labelPainter.height
             : valuePainter.height) +
-        3;
+        5;
   }
 
   double _contact(
@@ -234,7 +234,7 @@ class ReceiptBitmapBuilder {
       y,
       width,
       size: _footer,
-      gap: 1,
+      gap: 2,
     );
   }
 
@@ -293,7 +293,7 @@ class ReceiptBitmapBuilder {
     _cell(canvas, qty, x, y, qtyW, TextAlign.center, bold, ltr: true);
     x += qtyW;
     final namePainter = _cell(canvas, name, x, y, nameW, TextAlign.right, bold);
-    return y + namePainter + 4;
+    return y + namePainter + 6;
   }
 
   double _cell(
@@ -345,14 +345,14 @@ class ReceiptBitmapBuilder {
     )..layout();
     valuePainter.paint(canvas, Offset(_edge, y));
     labelPainter.paint(canvas, Offset(width - _edge - labelPainter.width, y));
-    return y + labelPainter.height + 4;
+    return y + labelPainter.height + 6;
   }
 
   double _dash(Canvas canvas, double y, int width) {
-    y += 6;
+    y += 8;
     final paint = Paint()
       ..color = Colors.black
-      ..strokeWidth = 1.4;
+      ..strokeWidth = 1.6;
     const dash = 5.0;
     const gap = 3.0;
     var x = 0.0;
@@ -361,7 +361,7 @@ class ReceiptBitmapBuilder {
       canvas.drawLine(Offset(x, y), Offset(end, y), paint);
       x += dash + gap;
     }
-    return y + 8;
+    return y + 10;
   }
 
   TextPainter _painter(
@@ -378,7 +378,7 @@ class ReceiptBitmapBuilder {
           color: Colors.black,
           fontSize: size,
           fontWeight: bold ? FontWeight.w900 : FontWeight.w400,
-          height: 1.3,
+          height: 1.35,
         ),
       ),
       textDirection: ltr ? TextDirection.ltr : TextDirection.rtl,
