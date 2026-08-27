@@ -26,13 +26,17 @@ class AppSettingsAdapter extends TypeAdapter<AppSettings> {
       defaultReceiverName: fields[9] as String?,
       isLoggedIn: fields[10] as bool? ?? false,
       boundDeviceId: fields[11] as String?,
+      deviceFingerprint: fields[12] as String?,
+      licenseIssuedAtMillis: fields[13] as int?,
+      licenseExpiresAtMillis: fields[14] as int?,
+      lastSeenTimestampMillis: fields[15] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppSettings obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.companyHeaderName)
       ..writeByte(1)
@@ -56,7 +60,15 @@ class AppSettingsAdapter extends TypeAdapter<AppSettings> {
       ..writeByte(10)
       ..write(obj.isLoggedIn)
       ..writeByte(11)
-      ..write(obj.boundDeviceId);
+      ..write(obj.boundDeviceId)
+      ..writeByte(12)
+      ..write(obj.deviceFingerprint)
+      ..writeByte(13)
+      ..write(obj.licenseIssuedAtMillis)
+      ..writeByte(14)
+      ..write(obj.licenseExpiresAtMillis)
+      ..writeByte(15)
+      ..write(obj.lastSeenTimestampMillis);
   }
 
   @override

@@ -19,6 +19,10 @@ class AppSettings extends HiveObject {
     this.defaultReceiverName,
     this.isLoggedIn = false,
     this.boundDeviceId,
+    this.deviceFingerprint,
+    this.licenseIssuedAtMillis,
+    this.licenseExpiresAtMillis,
+    this.lastSeenTimestampMillis,
   });
 
   factory AppSettings.defaults() {
@@ -68,6 +72,18 @@ class AppSettings extends HiveObject {
   @HiveField(11)
   String? boundDeviceId;
 
+  @HiveField(12)
+  String? deviceFingerprint;
+
+  @HiveField(13)
+  int? licenseIssuedAtMillis;
+
+  @HiveField(14)
+  int? licenseExpiresAtMillis;
+
+  @HiveField(15)
+  int? lastSeenTimestampMillis;
+
   AppSettings copyWith({
     String? companyHeaderName,
     String? defaultMarketId,
@@ -86,6 +102,14 @@ class AppSettings extends HiveObject {
     bool? isLoggedIn,
     String? boundDeviceId,
     bool clearBoundDeviceId = false,
+    String? deviceFingerprint,
+    bool clearDeviceFingerprint = false,
+    int? licenseIssuedAtMillis,
+    bool clearLicenseIssuedAtMillis = false,
+    int? licenseExpiresAtMillis,
+    bool clearLicenseExpiresAtMillis = false,
+    int? lastSeenTimestampMillis,
+    bool clearLastSeenTimestampMillis = false,
   }) {
     return AppSettings(
       companyHeaderName: companyHeaderName ?? this.companyHeaderName,
@@ -110,6 +134,18 @@ class AppSettings extends HiveObject {
       boundDeviceId: clearBoundDeviceId
           ? boundDeviceId
           : (boundDeviceId ?? this.boundDeviceId),
+      deviceFingerprint: clearDeviceFingerprint
+          ? deviceFingerprint
+          : (deviceFingerprint ?? this.deviceFingerprint),
+      licenseIssuedAtMillis: clearLicenseIssuedAtMillis
+          ? licenseIssuedAtMillis
+          : (licenseIssuedAtMillis ?? this.licenseIssuedAtMillis),
+      licenseExpiresAtMillis: clearLicenseExpiresAtMillis
+          ? licenseExpiresAtMillis
+          : (licenseExpiresAtMillis ?? this.licenseExpiresAtMillis),
+      lastSeenTimestampMillis: clearLastSeenTimestampMillis
+          ? lastSeenTimestampMillis
+          : (lastSeenTimestampMillis ?? this.lastSeenTimestampMillis),
     );
   }
 }

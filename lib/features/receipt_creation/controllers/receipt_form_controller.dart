@@ -7,6 +7,7 @@ import '../../../data/models/market.dart';
 import '../../../data/models/receipt.dart';
 import '../../../data/models/receipt_line_item.dart';
 import '../../../data/providers.dart';
+import '../../license/controllers/license_controller.dart';
 
 class DraftLineItem {
   DraftLineItem({
@@ -246,6 +247,7 @@ class ReceiptFormController extends Notifier<ReceiptFormState> {
       final saved = await ref
           .read(receiptsControllerProvider.notifier)
           .create(receipt);
+      await ref.read(licenseControllerProvider.notifier).recordReceiptActivity();
       state = state.copyWith(isSaving: false);
       return saved;
     } catch (error) {

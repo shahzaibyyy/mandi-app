@@ -6,6 +6,8 @@ import '../../features/auth/controllers/auth_controller.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/dashboard/screens/home_screen.dart';
 import '../../features/fee_types/screens/manage_fee_types_screen.dart';
+import '../../features/license/controllers/license_controller.dart';
+import '../../features/license/screens/activation_screen.dart';
 import '../../features/markets/screens/add_edit_market_screen.dart';
 import '../../features/markets/screens/market_list_screen.dart';
 import '../../features/printing/screens/printer_settings_screen.dart';
@@ -17,6 +19,7 @@ import '../../features/settings/screens/settings_screen.dart';
 final routerRefreshProvider = Provider<ValueNotifier<int>>((ref) {
   final notifier = ValueNotifier(0);
   ref.listen(authControllerProvider, (_, _) => notifier.value++);
+  ref.listen(licenseControllerProvider, (_, _) => notifier.value++);
   ref.onDispose(notifier.dispose);
   return notifier;
 });
@@ -24,16 +27,30 @@ final routerRefreshProvider = Provider<ValueNotifier<int>>((ref) {
 final appRouterProvider = Provider<GoRouter>((ref) {
   final refresh = ref.watch(routerRefreshProvider);
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/activate',
     refreshListenable: refresh,
     redirect: (context, state) {
+      final license = ref.read(licenseControllerProvider);
+      if (!license.isReady) return null;
+
+      final location = state.matchedLocation;
+      final onActivate = location == '/activate';
+      if (!license.isLicensed) {
+        return onActivate ? null : '/activate';
+      }
+
       final loggedIn = ref.read(authControllerProvider);
-      final onLogin = state.matchedLocation == '/login';
+      final onLogin = location == '/login';
       if (!loggedIn && !onLogin) return '/login';
-      if (loggedIn && onLogin) return '/';
+      if (loggedIn && (onLogin || onActivate)) return '/';
       return null;
     },
     routes: [
+      GoRoute(
+        path: '/activate',
+        name: 'activate',
+        builder: (context, state) => const ActivationScreen(),
+      ),
       GoRoute(
         path: '/login',
         name: 'login',

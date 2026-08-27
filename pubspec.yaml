@@ -24,6 +24,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   image: ^4.9.2
   device_info_plus: ^13.2.0
+  cryptography: ^2.9.0
+  crypto: ^3.0.7
+  base32: ^2.2.0
 
 dev_dependencies:
   flutter_test:

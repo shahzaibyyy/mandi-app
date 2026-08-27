@@ -43,6 +43,8 @@ class AppConstants {
 
   static const String loginEmail = 'mandi@mailinator.com';
   static const String loginPassword = 'Mandi@123';
+  static const String licenseSupportPhone = '+92 323 1233000';
+  static const int licenseDaysPerMonth = 30;
 
   /// Fallback when device GPS is unavailable (matches original PCMMDC slip).
   static const double defaultLatitude = 31.721045;

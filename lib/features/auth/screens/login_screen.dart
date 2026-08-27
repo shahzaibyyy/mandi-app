@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/snackbar_utils.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_text_field.dart';
+import '../../license/controllers/license_controller.dart';
 import '../controllers/auth_controller.dart';
 import '../services/auth_service.dart';
 
@@ -55,6 +57,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceId = ref.watch(licenseControllerProvider).deviceFingerprint;
+    final expiresAt = ref.watch(licenseControllerProvider).expiresAt;
+    final expiresLabel = expiresAt == null
+        ? null
+        : DateFormat('dd MMM yyyy').format(expiresAt.toLocal());
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -112,6 +120,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       onPressed: _loading ? null : _submit,
                     ),
                     const SizedBox(height: 16),
+                    if (deviceId != null) ...[
+                      Text(
+                        'Device ID: $deviceId',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      if (expiresLabel != null)
+                        Text(
+                          'Licensed until $expiresLabel',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      const SizedBox(height: 8),
+                    ],
                     const Text(
                       'One account works on the first device where you sign in.',
                       textAlign: TextAlign.center,

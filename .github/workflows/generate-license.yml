@@ -1,0 +1,42 @@
+name: Generate License
+
+on:
+  workflow_dispatch:
+    inputs:
+      device_id:
+        description: Device ID from the activation screen (8 chars)
+        required: true
+        type: string
+      months:
+        description: License length in months (30 days each)
+        required: false
+        default: "1"
+        type: string
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Generate activation code
+        env:
+          LICENSE_SIGNING_KEY: ${{ secrets.LICENSE_SIGNING_KEY }}
+        run: |
+          dart run tools/generate_license.dart \
+            --device-id="${{ github.event.inputs.device_id }}" \
+            --months="${{ github.event.inputs.months }}"
+
+      - name: Summary
+        run: |
+          echo "## License generated" >> "$GITHUB_STEP_SUMMARY"
+          echo "Device ID: ${{ github.event.inputs.device_id }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Months: ${{ github.event.inputs.months }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Copy the activation_code line from the log above." >> "$GITHUB_STEP_SUMMARY"
