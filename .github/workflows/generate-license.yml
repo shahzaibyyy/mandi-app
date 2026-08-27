@@ -19,24 +19,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: stable
+          flutter-version: "3.47.1"
+          channel: stable
+          cache: true
 
       - name: Install dependencies
-        run: dart pub get
+        run: flutter pub get
 
       - name: Generate activation code
         env:
           LICENSE_SIGNING_KEY: ${{ secrets.LICENSE_SIGNING_KEY }}
         run: |
+          if [ -z "$LICENSE_SIGNING_KEY" ]; then
+            echo "Missing GitHub secret LICENSE_SIGNING_KEY."
+            echo "Run tools/generate_keypair.dart locally and add PRIVATE_SEED_B64 to repo secrets."
+            exit 1
+          fi
           dart run tools/generate_license.dart \
             --device-id="${{ github.event.inputs.device_id }}" \
-            --months="${{ github.event.inputs.months }}"
+            --months="${{ github.event.inputs.months }}" | tee license_output.txt
 
       - name: Summary
         run: |
           echo "## License generated" >> "$GITHUB_STEP_SUMMARY"
           echo "Device ID: ${{ github.event.inputs.device_id }}" >> "$GITHUB_STEP_SUMMARY"
           echo "Months: ${{ github.event.inputs.months }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "Copy the activation_code line from the log above." >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          grep '^activation_code=' license_output.txt >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
