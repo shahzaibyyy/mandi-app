@@ -68,25 +68,27 @@ class ReceiptBitmapBuilder {
     );
     y = _kv(canvas, AppConstants.labelOperator, receipt.receiverName, y, widthPx);
     y += 6;
-    y = _center(canvas, AppConstants.labelReceiptNo, y, widthPx);
+    y = _center(canvas, AppConstants.labelReceiptNo, y, widthPx, bold: true);
     y = _center(
       canvas,
       receipt.receiptNumber,
       y,
       widthPx,
+      bold: true,
       ltr: true,
     );
     y += 4;
-    y = _center(canvas, AppConstants.labelDateTime, y, widthPx);
+    y = _center(canvas, AppConstants.labelDateTime, y, widthPx, bold: true);
     y = _center(
       canvas,
       DateFormatter.receiptPrintDateTime(receipt.createdAt),
       y,
       widthPx,
+      bold: true,
       ltr: true,
     );
     y = _dash(canvas, y, widthPx);
-    y = _center(canvas, AppConstants.labelFeeReceipt, y, widthPx);
+    y = _center(canvas, AppConstants.labelFeeReceipt, y, widthPx, bold: true);
     y += 4;
 
     y = _tableHeader(canvas, y, widthPx);
@@ -110,6 +112,7 @@ class ReceiptBitmapBuilder {
       widthPx,
       label: 'PST(${CurrencyFormatter.receipt(receipt.taxPercent)}%)',
       value: CurrencyFormatter.receipt(receipt.taxAmount),
+      bold: true,
     );
     y = _summaryRow(
       canvas,
@@ -121,7 +124,7 @@ class ReceiptBitmapBuilder {
     );
     y = _dash(canvas, y, widthPx);
 
-    y = _center(canvas, AppConstants.labelIssuedBy, y, widthPx);
+    y = _center(canvas, AppConstants.labelIssuedBy, y, widthPx, bold: true);
     y = _center(
       canvas,
       receipt.receiverName,
@@ -200,11 +203,13 @@ class ReceiptBitmapBuilder {
     final labelPainter = _painter(
       label,
       size: _body,
+      bold: true,
       align: TextAlign.right,
     )..layout();
     final valuePainter = _painter(
       value,
       size: _body,
+      bold: true,
       align: TextAlign.left,
       ltr: latin,
     )..layout(maxWidth: width - labelPainter.width - 16);
@@ -262,6 +267,7 @@ class ReceiptBitmapBuilder {
       qty: 'تعداد',
       rate: 'یونٹ',
       amount: 'قیمت',
+      bold: true,
     );
   }
 
@@ -345,36 +351,24 @@ class ReceiptBitmapBuilder {
 
   double _dash(Canvas canvas, double y, int width) {
     y += 6;
+    const dashStyle = TextStyle(
+      color: Colors.black,
+      fontSize: _body,
+      fontWeight: FontWeight.w900,
+      height: 1,
+      letterSpacing: -0.6,
+    );
     final glyph = TextPainter(
-      text: TextSpan(
-        text: '-',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: _body,
-          fontWeight: FontWeight.w400,
-          height: 1,
-          letterSpacing: -0.4,
-        ),
-      ),
+      text: const TextSpan(text: '-', style: dashStyle),
       textDirection: TextDirection.ltr,
     )..layout();
-    final usable = width - _edge * 2;
-    final count = (usable / glyph.width).floor().clamp(16, 80);
+    final count = (width / glyph.width).ceil().clamp(20, 160);
     final painter = TextPainter(
-      text: TextSpan(
-        text: '-' * count,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: _body,
-          fontWeight: FontWeight.w400,
-          height: 1,
-          letterSpacing: -0.4,
-        ),
-      ),
+      text: TextSpan(text: '-' * count, style: dashStyle),
       textDirection: TextDirection.ltr,
-      textAlign: TextAlign.center,
-    )..layout(maxWidth: usable);
-    painter.paint(canvas, Offset((width - painter.width) / 2, y));
+      textAlign: TextAlign.left,
+    )..layout(maxWidth: width.toDouble());
+    painter.paint(canvas, Offset(0, y));
     return y + painter.height + 6;
   }
 
