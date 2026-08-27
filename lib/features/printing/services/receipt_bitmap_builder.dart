@@ -87,12 +87,11 @@ class ReceiptBitmapBuilder {
       bold: true,
       ltr: true,
     );
-    y = _dash(canvas, y, widthPx);
+    y += 6;
     y = _center(canvas, AppConstants.labelFeeReceipt, y, widthPx, bold: true);
     y += 4;
 
     y = _tableHeader(canvas, y, widthPx);
-    y = _dash(canvas, y, widthPx);
     for (final item in receipt.lineItems) {
       y = _tableRow(
         canvas,
@@ -104,8 +103,8 @@ class ReceiptBitmapBuilder {
         amount: CurrencyFormatter.receipt(item.amount),
       );
     }
-    y = _dash(canvas, y, widthPx);
 
+    y = _dash(canvas, y, widthPx);
     y = _summaryRow(
       canvas,
       y,
@@ -118,7 +117,7 @@ class ReceiptBitmapBuilder {
       canvas,
       y,
       widthPx,
-      label: AppConstants.labelTotal,
+      label: AppConstants.labelTotalAmount,
       value: CurrencyFormatter.receipt(receipt.totalAmount),
       bold: true,
     );
@@ -351,25 +350,18 @@ class ReceiptBitmapBuilder {
 
   double _dash(Canvas canvas, double y, int width) {
     y += 6;
-    const dashStyle = TextStyle(
-      color: Colors.black,
-      fontSize: _body,
-      fontWeight: FontWeight.w900,
-      height: 1,
-      letterSpacing: -0.6,
-    );
-    final glyph = TextPainter(
-      text: const TextSpan(text: '-', style: dashStyle),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    final count = (width / glyph.width).ceil().clamp(20, 160);
-    final painter = TextPainter(
-      text: TextSpan(text: '-' * count, style: dashStyle),
-      textDirection: TextDirection.ltr,
-      textAlign: TextAlign.left,
-    )..layout(maxWidth: width.toDouble());
-    painter.paint(canvas, Offset(0, y));
-    return y + painter.height + 6;
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 1.4;
+    const dash = 5.0;
+    const gap = 3.0;
+    var x = 0.0;
+    while (x < width) {
+      final end = (x + dash).clamp(0.0, width.toDouble());
+      canvas.drawLine(Offset(x, y), Offset(end, y), paint);
+      x += dash + gap;
+    }
+    return y + 8;
   }
 
   TextPainter _painter(
@@ -386,11 +378,12 @@ class ReceiptBitmapBuilder {
           color: Colors.black,
           fontSize: size,
           fontWeight: bold ? FontWeight.w900 : FontWeight.w400,
-          height: 1.25,
+          height: 1.3,
         ),
       ),
       textDirection: ltr ? TextDirection.ltr : TextDirection.rtl,
       textAlign: align,
+      locale: const Locale('ur', 'PK'),
     );
   }
 

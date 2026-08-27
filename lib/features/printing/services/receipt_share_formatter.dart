@@ -41,7 +41,7 @@ class ReceiptShareFormatter {
       ..writeln(
         'PST(${CurrencyFormatter.receipt(receipt.taxPercent)}%)  ${CurrencyFormatter.receipt(receipt.taxAmount)}',
       )
-      ..writeln('${AppConstants.labelTotal}  ${CurrencyFormatter.receipt(receipt.totalAmount)}')
+      ..writeln('${AppConstants.labelTotalAmount}  ${CurrencyFormatter.receipt(receipt.totalAmount)}')
       ..writeln('${AppConstants.labelIssuedBy} ${receipt.receiverName}')
       ..writeln(receipt.isPaid ? AppConstants.labelPaid : AppConstants.labelUnpaid)
       ..writeln('${AppConstants.labelHelpline} : ${AppConstants.helplineNumber}')

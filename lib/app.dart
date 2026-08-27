@@ -13,7 +13,7 @@ class MandiApp extends ConsumerWidget {
       title: 'Mandi Receipts',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      routerConfig: appRouter,
+      routerConfig: ref.watch(appRouterProvider),
     );
   }
 }

@@ -17,6 +17,8 @@ class AppSettings extends HiveObject {
     required this.paperWidthMm,
     this.whatsappNumber,
     this.defaultReceiverName,
+    this.isLoggedIn = false,
+    this.boundDeviceId,
   });
 
   factory AppSettings.defaults() {
@@ -60,6 +62,12 @@ class AppSettings extends HiveObject {
   @HiveField(9)
   String? defaultReceiverName;
 
+  @HiveField(10)
+  bool isLoggedIn;
+
+  @HiveField(11)
+  String? boundDeviceId;
+
   AppSettings copyWith({
     String? companyHeaderName,
     String? defaultMarketId,
@@ -75,6 +83,9 @@ class AppSettings extends HiveObject {
     bool clearWhatsappNumber = false,
     String? defaultReceiverName,
     bool clearDefaultReceiverName = false,
+    bool? isLoggedIn,
+    String? boundDeviceId,
+    bool clearBoundDeviceId = false,
   }) {
     return AppSettings(
       companyHeaderName: companyHeaderName ?? this.companyHeaderName,
@@ -95,6 +106,10 @@ class AppSettings extends HiveObject {
       defaultReceiverName: clearDefaultReceiverName
           ? defaultReceiverName
           : (defaultReceiverName ?? this.defaultReceiverName),
+      isLoggedIn: isLoggedIn ?? this.isLoggedIn,
+      boundDeviceId: clearBoundDeviceId
+          ? boundDeviceId
+          : (boundDeviceId ?? this.boundDeviceId),
     );
   }
 }

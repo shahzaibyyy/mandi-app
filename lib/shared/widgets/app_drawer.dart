@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/controllers/auth_controller.dart';
 import '../../core/theme/app_colors.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -34,6 +36,16 @@ class AppDrawer extends StatelessWidget {
           _tile(context, Icons.sell_outlined, 'Fee Types', '/fee-types'),
           _tile(context, Icons.print_outlined, 'Printer', '/printer'),
           _tile(context, Icons.settings_outlined, 'Settings', '/settings'),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout, color: AppColors.unpaid),
+            title: const Text('Sign out'),
+            onTap: () async {
+              Navigator.of(context).pop();
+              await ref.read(authControllerProvider.notifier).logout();
+              if (context.mounted) context.go('/login');
+            },
+          ),
         ],
       ),
     );

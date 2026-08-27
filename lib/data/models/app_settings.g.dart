@@ -24,13 +24,15 @@ class AppSettingsAdapter extends TypeAdapter<AppSettings> {
       paperWidthMm: fields[7] as int,
       whatsappNumber: fields[8] as String?,
       defaultReceiverName: fields[9] as String?,
+      isLoggedIn: fields[10] as bool? ?? false,
+      boundDeviceId: fields[11] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppSettings obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.companyHeaderName)
       ..writeByte(1)
@@ -50,7 +52,11 @@ class AppSettingsAdapter extends TypeAdapter<AppSettings> {
       ..writeByte(8)
       ..write(obj.whatsappNumber)
       ..writeByte(9)
-      ..write(obj.defaultReceiverName);
+      ..write(obj.defaultReceiverName)
+      ..writeByte(10)
+      ..write(obj.isLoggedIn)
+      ..writeByte(11)
+      ..write(obj.boundDeviceId);
   }
 
   @override

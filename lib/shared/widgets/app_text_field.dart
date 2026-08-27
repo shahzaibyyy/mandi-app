@@ -16,6 +16,7 @@ class AppTextField extends StatelessWidget {
     this.inputFormatters,
     this.suffixText,
     this.hintText,
+    this.obscureText = false,
   });
 
   final String label;
@@ -30,6 +31,7 @@ class AppTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String? suffixText;
   final String? hintText;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class AppTextField extends StatelessWidget {
       textInputAction: textInputAction,
       maxLines: maxLines,
       enabled: enabled,
+      obscureText: obscureText,
       inputFormatters: inputFormatters,
       validator: requiredField
           ? (value) {

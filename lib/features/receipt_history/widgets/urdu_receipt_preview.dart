@@ -88,7 +88,7 @@ class UrduReceiptPreview extends StatelessWidget {
                   valueBold: true,
                   labelBold: true,
                 ),
-                _dash(),
+                const SizedBox(height: 6),
                 const Text(
                   AppConstants.labelFeeReceipt,
                   style: TextStyle(
@@ -98,7 +98,6 @@ class UrduReceiptPreview extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 _tableRow('فیس کی قسم', 'تعداد', 'یونٹ', 'قیمت', header: true),
-                _dash(),
                 for (final item in receipt.lineItems)
                   _tableRow(
                     item.feeTypeName,
@@ -113,7 +112,7 @@ class UrduReceiptPreview extends StatelessWidget {
                   bold: true,
                 ),
                 _summary(
-                  AppConstants.labelTotal,
+                  AppConstants.labelTotalAmount,
                   CurrencyFormatter.receipt(receipt.totalAmount),
                   bold: true,
                 ),
@@ -173,31 +172,8 @@ class UrduReceiptPreview extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: SizedBox(
         width: double.infinity,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            const style = TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: _body,
-              height: 1,
-              letterSpacing: -0.6,
-            );
-            final painter = TextPainter(
-              text: const TextSpan(text: '-', style: style),
-              textDirection: TextDirection.ltr,
-            )..layout();
-            final count = (constraints.maxWidth / painter.width).ceil().clamp(
-              20,
-              160,
-            );
-            return Text(
-              '-' * count,
-              maxLines: 1,
-              overflow: TextOverflow.clip,
-              textAlign: TextAlign.left,
-              style: style,
-            );
-          },
-        ),
+        height: 2,
+        child: CustomPaint(painter: _ReceiptDashPainter()),
       ),
     );
   }
@@ -331,4 +307,25 @@ class UrduReceiptPreview extends StatelessWidget {
     final trimmed = value.trim();
     return trimmed.isNotEmpty && RegExp(r'^[\x00-\x7F]+$').hasMatch(trimmed);
   }
+}
+
+class _ReceiptDashPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 1.4;
+    const dash = 5.0;
+    const gap = 3.0;
+    var x = 0.0;
+    final y = size.height / 2;
+    while (x < size.width) {
+      final end = (x + dash).clamp(0.0, size.width);
+      canvas.drawLine(Offset(x, y), Offset(end, y), paint);
+      x += dash + gap;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

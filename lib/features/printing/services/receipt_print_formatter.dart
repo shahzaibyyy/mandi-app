@@ -10,6 +10,7 @@ class ReceiptPrintFormatter {
     : _bitmap = bitmapBuilder ?? ReceiptBitmapBuilder();
 
   final ReceiptBitmapBuilder _bitmap;
+  static const _renderScale = 2;
 
   Future<List<int>> buildBytes({
     required Receipt receipt,
@@ -29,24 +30,31 @@ class ReceiptPrintFormatter {
       settings: settings,
       marketCityDistrict: marketCityDistrict,
       companyHeaderName: companyHeaderName,
-      widthPx: widthPx,
+      widthPx: widthPx * _renderScale,
     );
-    final decoded = img.decodePng(png);
+    var decoded = img.decodePng(png);
     if (decoded == null) {
       throw Exception('Could not render the Urdu receipt image.');
     }
-    final gray = img.grayscale(decoded);
+    if (_renderScale > 1) {
+      decoded = img.copyResize(
+        decoded,
+        width: widthPx,
+        interpolation: img.Interpolation.average,
+      );
+    }
+    final binary = _binarize(img.grayscale(decoded));
 
     final bytes = <int>[];
     bytes.addAll(generator.reset());
     const chunk = 240;
-    for (var top = 0; top < gray.height; top += chunk) {
-      final height = (top + chunk <= gray.height) ? chunk : gray.height - top;
+    for (var top = 0; top < binary.height; top += chunk) {
+      final height = (top + chunk <= binary.height) ? chunk : binary.height - top;
       final slice = img.copyCrop(
-        gray,
+        binary,
         x: 0,
         y: top,
-        width: gray.width,
+        width: binary.width,
         height: height,
       );
       bytes.addAll(
@@ -56,5 +64,16 @@ class ReceiptPrintFormatter {
     bytes.addAll(generator.feed(2));
     bytes.addAll(generator.cut());
     return bytes;
+  }
+
+  img.Image _binarize(img.Image gray) {
+    final out = img.Image(width: gray.width, height: gray.height);
+    for (var y = 0; y < gray.height; y++) {
+      for (var x = 0; x < gray.width; x++) {
+        final l = gray.getPixel(x, y).r;
+        out.setPixel(x, y, l < 150 ? img.ColorRgb8(0, 0, 0) : img.ColorRgb8(255, 255, 255));
+      }
+    }
+    return out;
   }
 }

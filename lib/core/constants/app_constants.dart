@@ -39,6 +39,10 @@ class AppConstants {
   static const String labelGps = 'GPS مقام';
   static const String labelThanks = 'شکریہ';
   static const String labelTotal = 'کل';
+  static const String labelTotalAmount = 'کل رقم';
+
+  static const String loginEmail = 'mandi@mailinator.com';
+  static const String loginPassword = 'Mandi@123';
 
   /// Fallback when device GPS is unavailable (matches original PCMMDC slip).
   static const double defaultLatitude = 31.721045;
