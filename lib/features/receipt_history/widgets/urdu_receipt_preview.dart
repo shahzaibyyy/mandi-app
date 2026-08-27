@@ -36,9 +36,9 @@ class UrduReceiptPreview extends StatelessWidget {
     final whatsapp = (settings.whatsappNumber?.trim().isNotEmpty == true)
         ? settings.whatsappNumber!.trim()
         : AppConstants.defaultWhatsappNumber;
-    final gps = (receipt.latitude != null && receipt.longitude != null)
-        ? '${receipt.latitude!.toStringAsFixed(6)}, ${receipt.longitude!.toStringAsFixed(6)}'
-        : '-';
+    final lat = receipt.latitude ?? AppConstants.defaultLatitude;
+    final lng = receipt.longitude ?? AppConstants.defaultLongitude;
+    final gps = '${lat.toStringAsFixed(6)}, ${lng.toStringAsFixed(6)}';
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -74,7 +74,7 @@ class UrduReceiptPreview extends StatelessWidget {
                       : '-',
                 ),
                 _kv(AppConstants.labelOperator, receipt.receiverName),
-                _dash(),
+                const SizedBox(height: 6),
                 _stackedCenter(AppConstants.labelReceiptNo, receipt.receiptNumber),
                 const SizedBox(height: 6),
                 _stackedCenter(
@@ -131,9 +131,23 @@ class UrduReceiptPreview extends StatelessWidget {
                 const SizedBox(height: 8),
                 const Text(
                   AppConstants.labelThanks,
-                  style: TextStyle(fontSize: _body),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: _body, fontWeight: FontWeight.w400),
                 ),
-                const Text(AppConstants.poweredBy),
+                const SizedBox(height: 4),
+                const Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Text(
+                    AppConstants.poweredBy,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: _body,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 0.2,
+                      height: 1.2,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -198,16 +212,19 @@ class UrduReceiptPreview extends StatelessWidget {
 
   Widget _contactLine(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 1.5),
+      padding: const EdgeInsets.only(bottom: 1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label),
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w400)),
           const Text(' : '),
           Directionality(
             textDirection: TextDirection.ltr,
-            child: Text(value),
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w400),
+            ),
           ),
         ],
       ),

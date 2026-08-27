@@ -39,4 +39,8 @@ class AppConstants {
   static const String labelGps = 'GPS مقام';
   static const String labelThanks = 'شکریہ';
   static const String labelTotal = 'کل';
+
+  /// Fallback when device GPS is unavailable (matches original PCMMDC slip).
+  static const double defaultLatitude = 31.721045;
+  static const double defaultLongitude = 73.927004;
 }

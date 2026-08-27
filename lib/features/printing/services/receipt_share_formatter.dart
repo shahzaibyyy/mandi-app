@@ -15,9 +15,9 @@ class ReceiptShareFormatter {
     final whatsapp = (settings.whatsappNumber?.trim().isNotEmpty == true)
         ? settings.whatsappNumber!.trim()
         : AppConstants.defaultWhatsappNumber;
-    final gps = (receipt.latitude != null && receipt.longitude != null)
-        ? '${receipt.latitude!.toStringAsFixed(6)}, ${receipt.longitude!.toStringAsFixed(6)}'
-        : '-';
+    final lat = receipt.latitude ?? AppConstants.defaultLatitude;
+    final lng = receipt.longitude ?? AppConstants.defaultLongitude;
+    final gps = '${lat.toStringAsFixed(6)}, ${lng.toStringAsFixed(6)}';
     final buffer = StringBuffer()
       ..writeln(settings.companyHeaderName)
       ..writeln('${AppConstants.labelDivision}: ${cityDistrict ?? '-'}')

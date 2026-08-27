@@ -17,7 +17,7 @@ class ReceiptBitmapBuilder {
   static const _summary = 15.5;
   static const _issuedName = 20.5;
   static const _paid = 26.5;
-  static const _powered = 13.5;
+  static const _footer = 14.5;
   static const _edge = 4.0;
 
   Future<Uint8List> buildPng({
@@ -67,7 +67,7 @@ class ReceiptBitmapBuilder {
       widthPx,
     );
     y = _kv(canvas, AppConstants.labelOperator, receipt.receiverName, y, widthPx);
-    y = _dash(canvas, y, widthPx);
+    y += 6;
     y = _center(canvas, AppConstants.labelReceiptNo, y, widthPx);
     y = _center(
       canvas,
@@ -140,21 +140,22 @@ class ReceiptBitmapBuilder {
       size: _paid,
       bold: true,
     );
-    y += 8;
+    y += 10;
 
     final whatsapp = (settings.whatsappNumber?.trim().isNotEmpty == true)
         ? settings.whatsappNumber!.trim()
         : AppConstants.defaultWhatsappNumber;
-    final gps = (receipt.latitude != null && receipt.longitude != null)
-        ? '${receipt.latitude!.toStringAsFixed(6)}, ${receipt.longitude!.toStringAsFixed(6)}'
-        : '-';
+    final lat = receipt.latitude ?? AppConstants.defaultLatitude;
+    final lng = receipt.longitude ?? AppConstants.defaultLongitude;
+    final gps = '${lat.toStringAsFixed(6)}, ${lng.toStringAsFixed(6)}';
     y = _contact(canvas, AppConstants.labelHelpline, AppConstants.helplineNumber, y, widthPx);
     y = _contact(canvas, AppConstants.labelWhatsapp, whatsapp, y, widthPx);
     y = _contact(canvas, AppConstants.labelGps, gps, y, widthPx);
-    y += 6;
-    y = _center(canvas, AppConstants.labelThanks, y, widthPx);
-    y = _center(canvas, AppConstants.poweredBy, y, widthPx, size: _powered);
-    y += 12;
+    y += 8;
+    y = _center(canvas, AppConstants.labelThanks, y, widthPx, size: _footer);
+    y += 4;
+    y = _poweredBy(canvas, y, widthPx);
+    y += 14;
 
     final picture = recorder.endRecording();
     final image = await picture.toImage(widthPx, y.ceil());
@@ -228,8 +229,28 @@ class ReceiptBitmapBuilder {
       '$label : \u2066$value\u2069',
       y,
       width,
-      gap: 1.5,
+      size: _footer,
+      gap: 1,
     );
+  }
+
+  double _poweredBy(Canvas canvas, double y, int width) {
+    final painter = TextPainter(
+      text: TextSpan(
+        text: AppConstants.poweredBy,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: _footer,
+          fontWeight: FontWeight.w400,
+          height: 1.2,
+          letterSpacing: 0.2,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: width - 8);
+    painter.paint(canvas, Offset((width - painter.width) / 2, y));
+    return y + painter.height + 3;
   }
 
   double _tableHeader(Canvas canvas, double y, int width) {
