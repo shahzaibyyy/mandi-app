@@ -3,13 +3,10 @@ import 'package:image/image.dart' as img;
 
 import '../../../data/models/app_settings.dart';
 import '../../../data/models/receipt.dart';
-import 'receipt_bitmap_builder.dart';
+import '../../receipts/templates/receipt_template_resolver.dart';
 
 class ReceiptPrintFormatter {
-  ReceiptPrintFormatter({ReceiptBitmapBuilder? bitmapBuilder})
-    : _bitmap = bitmapBuilder ?? ReceiptBitmapBuilder();
-
-  final ReceiptBitmapBuilder _bitmap;
+  ReceiptPrintFormatter();
 
   Future<List<int>> buildBytes({
     required Receipt receipt,
@@ -24,7 +21,7 @@ class ReceiptPrintFormatter {
     final widthPx = settings.paperWidthMm >= 80 ? 576 : 384;
     final generator = Generator(paperSize, profile);
 
-    final png = await _bitmap.buildPng(
+    final png = await resolveTemplate(settings.receiptTemplateVersion).buildPng(
       receipt: receipt,
       settings: settings,
       marketCityDistrict: marketCityDistrict,

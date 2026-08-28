@@ -23,6 +23,7 @@ class AppSettings extends HiveObject {
     this.licenseIssuedAtMillis,
     this.licenseExpiresAtMillis,
     this.lastSeenTimestampMillis,
+    this.receiptTemplateVersion = 'v1',
   });
 
   factory AppSettings.defaults() {
@@ -84,6 +85,9 @@ class AppSettings extends HiveObject {
   @HiveField(15)
   int? lastSeenTimestampMillis;
 
+  @HiveField(16)
+  String receiptTemplateVersion;
+
   AppSettings copyWith({
     String? companyHeaderName,
     String? defaultMarketId,
@@ -110,6 +114,7 @@ class AppSettings extends HiveObject {
     bool clearLicenseExpiresAtMillis = false,
     int? lastSeenTimestampMillis,
     bool clearLastSeenTimestampMillis = false,
+    String? receiptTemplateVersion,
   }) {
     return AppSettings(
       companyHeaderName: companyHeaderName ?? this.companyHeaderName,
@@ -146,6 +151,8 @@ class AppSettings extends HiveObject {
       lastSeenTimestampMillis: clearLastSeenTimestampMillis
           ? lastSeenTimestampMillis
           : (lastSeenTimestampMillis ?? this.lastSeenTimestampMillis),
+      receiptTemplateVersion:
+          receiptTemplateVersion ?? this.receiptTemplateVersion,
     );
   }
 }

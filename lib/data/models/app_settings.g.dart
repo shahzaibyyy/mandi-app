@@ -30,13 +30,14 @@ class AppSettingsAdapter extends TypeAdapter<AppSettings> {
       licenseIssuedAtMillis: fields[13] as int?,
       licenseExpiresAtMillis: fields[14] as int?,
       lastSeenTimestampMillis: fields[15] as int?,
+      receiptTemplateVersion: fields[16] as String? ?? 'v1',
     );
   }
 
   @override
   void write(BinaryWriter writer, AppSettings obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.companyHeaderName)
       ..writeByte(1)
@@ -68,7 +69,9 @@ class AppSettingsAdapter extends TypeAdapter<AppSettings> {
       ..writeByte(14)
       ..write(obj.licenseExpiresAtMillis)
       ..writeByte(15)
-      ..write(obj.lastSeenTimestampMillis);
+      ..write(obj.lastSeenTimestampMillis)
+      ..writeByte(16)
+      ..write(obj.receiptTemplateVersion);
   }
 
   @override

@@ -88,6 +88,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             keyboardType: TextInputType.phone,
           ),
           const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+            // ignore: deprecated_member_use
+            value: settings.receiptTemplateVersion == 'v2' ? 'v2' : 'v1',
+            decoration: const InputDecoration(labelText: 'Receipt style'),
+            items: const [
+              DropdownMenuItem(value: 'v1', child: Text('Classic (v1)')),
+              DropdownMenuItem(value: 'v2', child: Text('Compact (v2)')),
+            ],
+            onChanged: (version) async {
+              if (version == null) return;
+              try {
+                await ref.read(settingsControllerProvider.notifier).save(
+                      settings.copyWith(receiptTemplateVersion: version),
+                    );
+              } catch (error) {
+                if (context.mounted) SnackbarUtils.error(context, error);
+              }
+            },
+          ),
+          const SizedBox(height: 12),
           DropdownButtonFormField<String?>(
             // ignore: deprecated_member_use
             value: markets.any((m) => m.id == settings.defaultMarketId)
