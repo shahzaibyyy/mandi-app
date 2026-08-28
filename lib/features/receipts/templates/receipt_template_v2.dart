@@ -12,14 +12,21 @@ import 'receipt_template.dart';
 
 /// Compact PCMMDC receipt — same fields as v1 with tighter vertical spacing.
 class ReceiptTemplateV2 implements ReceiptTemplate {
-  static const _body = 18.0;
-  static const _company = 21.0;
-  static const _table = 16.0;
-  static const _summary = 19.0;
-  static const _issuedName = 26.0;
-  static const _paid = 32.0;
-  static const _footer = 16.0;
+  static const _body = 17.0;
+  static const _company = 20.0;
+  static const _table = 15.0;
+  static const _summary = 18.0;
+  static const _issuedName = 20.0;
+  static const _paid = 22.0;
+  static const _footer = 15.0;
   static const _edge = 4.0;
+  static const _lineHeight = 1.12;
+  static const _gapRow = 1.0;
+  static const _gapSection = 1.0;
+  static const _gapCenter = 1.0;
+  static const _gapDashBefore = 1.0;
+  static const _gapDashAfter = 2.0;
+  static const _gapFooter = 2.0;
 
   @override
   Future<Uint8List> buildPng({
@@ -36,7 +43,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
       Paint()..color = Colors.white,
     );
 
-    var y = 6.0;
+    var y = 3.0;
     final logo = await _logo();
     if (logo != null) {
       const logoW = 112.0;
@@ -48,14 +55,14 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
         Rect.fromLTWH(dx, y, logoW, logoH),
         Paint(),
       );
-      y += logoH + 6;
+      y += logoH + 2;
     }
 
     final company = (companyHeaderName != null && companyHeaderName.isNotEmpty)
         ? companyHeaderName
         : settings.companyHeaderName;
     y = _center(canvas, company, y, widthPx, size: _company, bold: true);
-    y += 6;
+    y += _gapSection;
 
     y = _kv(canvas, AppConstants.labelDivision, marketCityDistrict ?? '', y, widthPx);
     y = _kv(canvas, AppConstants.labelMarket, receipt.marketNameSnapshot, y, widthPx);
@@ -69,7 +76,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
       widthPx,
     );
     y = _kv(canvas, AppConstants.labelOperator, receipt.receiverName, y, widthPx);
-    y += 5;
+    y += _gapSection;
     y = _center(canvas, AppConstants.labelReceiptNo, y, widthPx, bold: true);
     y = _center(
       canvas,
@@ -79,7 +86,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
       bold: true,
       ltr: true,
     );
-    y += 3;
+    y += _gapRow;
     y = _center(canvas, AppConstants.labelDateTime, y, widthPx, bold: true);
     y = _center(
       canvas,
@@ -89,9 +96,9 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
       bold: true,
       ltr: true,
     );
-    y += 5;
+    y += _gapSection;
     y = _center(canvas, AppConstants.labelFeeReceipt, y, widthPx, bold: true);
-    y += 3;
+    y += _gapRow;
 
     y = _tableHeader(canvas, y, widthPx);
     for (final item in receipt.lineItems) {
@@ -135,7 +142,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
       bold: true,
       ltr: _isLatin(receipt.receiverName),
     );
-    y += 3;
+    y += _gapRow;
     y = _center(
       canvas,
       receipt.isPaid ? AppConstants.labelPaid : AppConstants.labelUnpaid,
@@ -144,7 +151,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
       size: _paid,
       bold: true,
     );
-    y += 7;
+    y += _gapSection;
 
     final whatsapp = (settings.whatsappNumber?.trim().isNotEmpty == true)
         ? settings.whatsappNumber!.trim()
@@ -155,11 +162,11 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
     y = _contact(canvas, AppConstants.labelHelpline, AppConstants.helplineNumber, y, widthPx);
     y = _contact(canvas, AppConstants.labelWhatsapp, whatsapp, y, widthPx);
     y = _contact(canvas, AppConstants.labelGps, gps, y, widthPx);
-    y += 6;
+    y += _gapSection;
     y = _center(canvas, AppConstants.labelThanks, y, widthPx, size: _footer);
-    y += 3;
+    y += _gapRow;
     y = _poweredBy(canvas, y, widthPx);
-    y += 10;
+    y += _gapFooter;
 
     final picture = recorder.endRecording();
     final image = await picture.toImage(widthPx, y.ceil());
@@ -186,7 +193,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
     double size = _body,
     bool bold = false,
     bool ltr = false,
-    double gap = 3,
+    double gap = _gapCenter,
   }) {
     final painter = _painter(
       text,
@@ -220,7 +227,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
         (labelPainter.height > valuePainter.height
             ? labelPainter.height
             : valuePainter.height) +
-        3;
+        _gapRow;
   }
 
   double _contact(
@@ -236,7 +243,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
       y,
       width,
       size: _footer,
-      gap: 1,
+      gap: 0,
     );
   }
 
@@ -256,7 +263,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
       textAlign: TextAlign.center,
     )..layout(maxWidth: width - 8);
     painter.paint(canvas, Offset((width - painter.width) / 2, y));
-    return y + painter.height + 2;
+    return y + painter.height + _gapRow;
   }
 
   double _tableHeader(Canvas canvas, double y, int width) {
@@ -295,7 +302,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
     _cell(canvas, qty, x, y, qtyW, TextAlign.center, bold, ltr: true);
     x += qtyW;
     final namePainter = _cell(canvas, name, x, y, nameW, TextAlign.right, bold);
-    return y + namePainter + 4;
+    return y + namePainter + _gapRow;
   }
 
   double _cell(
@@ -347,11 +354,11 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
     )..layout();
     valuePainter.paint(canvas, Offset(_edge, y));
     labelPainter.paint(canvas, Offset(width - _edge - labelPainter.width, y));
-    return y + labelPainter.height + 4;
+    return y + labelPainter.height + _gapRow;
   }
 
   double _dash(Canvas canvas, double y, int width) {
-    y += 5;
+    y += _gapDashBefore;
     final paint = Paint()
       ..color = Colors.black
       ..strokeWidth = 1.6;
@@ -363,7 +370,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
       canvas.drawLine(Offset(x, y), Offset(end, y), paint);
       x += dash + gap;
     }
-    return y + 6;
+    return y + _gapDashAfter;
   }
 
   TextPainter _painter(
@@ -380,7 +387,7 @@ class ReceiptTemplateV2 implements ReceiptTemplate {
           color: Colors.black,
           fontSize: size,
           fontWeight: bold ? FontWeight.w900 : FontWeight.w400,
-          height: 1.28,
+          height: _lineHeight,
         ),
       ),
       textDirection: ltr ? TextDirection.ltr : TextDirection.rtl,

@@ -59,49 +59,39 @@ class ReceiptTemplateV3 implements ReceiptTemplate {
         : settings.companyHeaderName;
     y = _center(canvas, company, y, widthPx, size: _company, gap: 4);
 
-    y = _kv(
+    y = _kvPair(
       canvas,
-      AppConstants.labelMarket,
-      marketCityDistrict ?? '',
       y,
       widthPx,
-      value: receipt.marketNameSnapshot,
+      rightLabel: AppConstants.labelMarket,
+      rightValue: receipt.marketNameSnapshot,
+      leftLabel: AppConstants.labelDivision,
+      leftValue: marketCityDistrict ?? '',
     );
-    y = _kv(
+    y = _kvPair(
       canvas,
-      'آپریٹر',
-      receipt.contractorName?.trim().isNotEmpty == true
+      y,
+      widthPx,
+      rightLabel: 'آپریٹر',
+      rightValue: receipt.receiverName,
+      leftLabel: AppConstants.labelContractor,
+      leftValue: receipt.contractorName?.trim().isNotEmpty == true
           ? receipt.contractorName!.trim()
           : '-',
-      y,
-      widthPx,
-      value: receipt.receiverName,
     );
 
-    y = _kv(
+    final dateTime =
+        '${_dateOnly.format(receipt.createdAt)}\n${_timeOnly.format(receipt.createdAt)}';
+    y = _kvPair(
       canvas,
-      AppConstants.labelReceiptNo,
-      receipt.receiptNumber,
       y,
       widthPx,
-      ltrValue: true,
-    );
-    y = _kv(
-      canvas,
-      'تاریخ',
-      _dateOnly.format(receipt.createdAt),
-      y,
-      widthPx,
-      ltrValue: true,
-    );
-    y = _text(
-      canvas,
-      _timeOnly.format(receipt.createdAt),
-      y,
-      widthPx,
-      align: TextAlign.left,
-      ltr: true,
-      gap: 4,
+      rightLabel: AppConstants.labelReceiptNo,
+      rightValue: receipt.receiptNumber,
+      rightLtr: true,
+      leftLabel: 'تاریخ',
+      leftValue: dateTime,
+      leftLtr: true,
     );
 
     y += 2;
@@ -155,31 +145,18 @@ class ReceiptTemplateV3 implements ReceiptTemplate {
     final lng = receipt.longitude ?? AppConstants.defaultLongitude;
     final gps = '${lat.toStringAsFixed(6)}, ${lng.toStringAsFixed(6)}';
 
-    y = _kv(
+    y = _kvPair(
       canvas,
-      AppConstants.labelWhatsapp,
-      whatsapp,
       y,
       widthPx,
-      ltrValue: true,
+      rightLabel: AppConstants.labelWhatsapp,
+      rightValue: whatsapp,
+      rightLtr: true,
+      leftLabel: AppConstants.labelHelpline,
+      leftValue: AppConstants.helplineNumber,
+      leftLtr: true,
     );
-    y = _kv(
-      canvas,
-      AppConstants.labelHelpline,
-      AppConstants.helplineNumber,
-      y,
-      widthPx,
-      value: whatsapp,
-      ltrValue: true,
-    );
-    y = _kv(
-      canvas,
-      AppConstants.labelGps,
-      gps,
-      y,
-      widthPx,
-      ltrValue: true,
-    );
+    y = _kv(canvas, AppConstants.labelGps, gps, y, widthPx, ltrValue: true);
     y += 3;
     y = _center(
       canvas,
@@ -238,71 +215,92 @@ class ReceiptTemplateV3 implements ReceiptTemplate {
     return y + painter.height + gap;
   }
 
-  double _text(
-    Canvas canvas,
-    String text,
-    double y,
-    int width, {
-    double size = _body,
-    bool bold = false,
-    TextAlign align = TextAlign.right,
-    bool ltr = false,
-    double gap = 2,
-  }) {
-    final painter = _painter(
-      text,
-      size: size,
-      bold: bold,
-      align: align,
-      ltr: ltr,
-    )..layout(maxWidth: width - 16);
-    final dx = switch (align) {
-      TextAlign.left => _edge,
-      TextAlign.center => (width - painter.width) / 2,
-      _ => width - _edge - painter.width,
-    };
-    painter.paint(canvas, Offset(dx, y));
-    return y + painter.height + gap;
-  }
-
-  /// Label on the right; [value] on the left; optional [value] in the middle.
+  /// One label+value pair: label on the right, value on the left.
   double _kv(
     Canvas canvas,
     String label,
-    String leftValue,
+    String value,
     double y,
     int width, {
-    String? value,
     bool ltrValue = false,
   }) {
-    final mid = value ?? leftValue;
-    final left = value == null ? leftValue : leftValue;
-    final labelPainter = _painter(label, size: _body, align: TextAlign.right)
-      ..layout();
-    final midPainter = _painter(
-      mid,
+    final rowH = _labelValuePair(
+      canvas,
+      label,
+      value,
+      y,
+      _edge,
+      width.toDouble() - _edge,
+      ltrValue: ltrValue,
+    );
+    return y + rowH + 3;
+  }
+
+  /// Two mirrored label+value pairs on one row (right half + left half).
+  double _kvPair(
+    Canvas canvas,
+    double y,
+    int width, {
+    required String rightLabel,
+    required String rightValue,
+    required String leftLabel,
+    required String leftValue,
+    bool rightLtr = false,
+    bool leftLtr = false,
+  }) {
+    final mid = width / 2.0;
+    final rightH = _labelValuePair(
+      canvas,
+      rightLabel,
+      rightValue,
+      y,
+      mid + 2,
+      width.toDouble() - _edge,
+      ltrValue: rightLtr,
+    );
+    final leftH = _labelValuePair(
+      canvas,
+      leftLabel,
+      leftValue,
+      y,
+      _edge,
+      mid - 2,
+      ltrValue: leftLtr,
+    );
+    return y + (rightH > leftH ? rightH : leftH) + 3;
+  }
+
+  double _labelValuePair(
+    Canvas canvas,
+    String label,
+    String value,
+    double y,
+    double regionLeft,
+    double regionRight, {
+    bool ltrValue = false,
+  }) {
+    final regionW = regionRight - regionLeft;
+    final labelPainter = _painter(
+      label,
       size: _body,
-      align: TextAlign.center,
-      ltr: _isLatin(mid),
-    )..layout(maxWidth: width * 0.45);
-    final leftPainter = _painter(
-      left,
+      align: TextAlign.right,
+    )..layout(maxWidth: regionW * 0.42);
+    final valuePainter = _painter(
+      value,
       size: _body,
       align: TextAlign.left,
-      ltr: ltrValue || _isLatin(left),
-    )..layout(maxWidth: width * 0.28);
+      ltr: ltrValue || _isLatin(value),
+    )..layout(maxWidth: regionW * 0.52);
 
-    final rowH = [
-      labelPainter.height,
-      midPainter.height,
-      leftPainter.height,
-    ].reduce((a, b) => a > b ? a : b);
+    labelPainter.paint(
+      canvas,
+      Offset(regionRight - labelPainter.width, y),
+    );
+    valuePainter.paint(canvas, Offset(regionLeft, y));
 
-    labelPainter.paint(canvas, Offset(width - _edge - labelPainter.width, y));
-    midPainter.paint(canvas, Offset((width - midPainter.width) / 2, y));
-    leftPainter.paint(canvas, Offset(_edge, y));
-
-    return y + rowH + 3;
+    return labelPainter.height > valuePainter.height
+        ? labelPainter.height
+        : valuePainter.height;
   }
 
   double _tableHeader(Canvas canvas, double y, int width) {
