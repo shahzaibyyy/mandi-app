@@ -90,11 +90,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
             // ignore: deprecated_member_use
-            value: settings.receiptTemplateVersion == 'v2' ? 'v2' : 'v1',
+            value: switch (settings.receiptTemplateVersion) {
+              'v2' => 'v2',
+              'v3' => 'v3',
+              _ => 'v1',
+            },
             decoration: const InputDecoration(labelText: 'Receipt style'),
             items: const [
               DropdownMenuItem(value: 'v1', child: Text('Classic (v1)')),
               DropdownMenuItem(value: 'v2', child: Text('Compact (v2)')),
+              DropdownMenuItem(value: 'v3', child: Text('Original (v3)')),
             ],
             onChanged: (version) async {
               if (version == null) return;
