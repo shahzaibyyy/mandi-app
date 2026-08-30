@@ -69,9 +69,7 @@ class UrduReceiptPreview extends StatelessWidget {
                 _kv(AppConstants.labelMarket, receipt.marketNameSnapshot),
                 _kv(
                   AppConstants.labelContractor,
-                  receipt.contractorName?.trim().isNotEmpty == true
-                      ? receipt.contractorName!
-                      : '-',
+                  AppConstants.contractorDisplayName(receipt.contractorName),
                 ),
                 _kv(AppConstants.labelOperator, receipt.receiverName),
                 const SizedBox(height: 6),

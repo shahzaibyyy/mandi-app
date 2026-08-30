@@ -23,7 +23,7 @@ class ReceiptShareFormatter {
       ..writeln('${AppConstants.labelDivision}: ${cityDistrict ?? '-'}')
       ..writeln('${AppConstants.labelMarket}: ${receipt.marketNameSnapshot}')
       ..writeln(
-        '${AppConstants.labelContractor}: ${receipt.contractorName?.trim().isNotEmpty == true ? receipt.contractorName : '-'}',
+        '${AppConstants.labelContractor}: ${AppConstants.contractorDisplayName(receipt.contractorName)}',
       )
       ..writeln('${AppConstants.labelOperator}: ${receipt.receiverName}')
       ..writeln('${AppConstants.labelReceiptNo} ${receipt.receiptNumber}')
