@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/gps_capture.dart';
 import '../../../data/models/fee_type.dart';
 import '../../../data/models/market.dart';
@@ -126,6 +127,7 @@ class ReceiptFormController extends Notifier<ReceiptFormState> {
     return ReceiptFormState(
       marketId: marketId,
       receiverName: settings.defaultReceiverName ?? '',
+      contractorName: AppConstants.defaultContractorName,
       taxPercent: settings.defaultTaxPercent,
       isPaid: true,
     );
@@ -231,9 +233,9 @@ class ReceiptFormController extends Notifier<ReceiptFormState> {
         marketId: market.id,
         marketNameSnapshot: market.name,
         receiverName: state.receiverName.trim(),
-        contractorName: state.contractorName.trim().isEmpty
-            ? null
-            : state.contractorName.trim(),
+        contractorName: AppConstants.contractorDisplayName(
+          state.contractorName,
+        ),
         lineItems: state.lineItems.map((item) => item.toEmbedded()).toList(),
         subtotal: state.subtotal,
         taxPercent: state.taxPercent,

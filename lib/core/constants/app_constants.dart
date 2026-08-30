@@ -27,6 +27,17 @@ class AppConstants {
   static const String labelDivision = 'ڈویژن';
   static const String labelMarket = 'مارکیٹ';
   static const String labelContractor = 'نام ٹھیکیدار';
+  /// Permanent thekdar printed on v4 (and used when the form field is empty).
+  static const String defaultContractorName = 'سید تحریم عباس';
+
+  static String contractorDisplayName(String? name) {
+    final trimmed = name?.trim();
+    if (trimmed == null || trimmed.isEmpty) {
+      return defaultContractorName;
+    }
+    return trimmed;
+  }
+
   static const String labelOperator = 'نام آپریٹر';
   static const String labelReceiptNo = 'رسید نمبر';
   static const String labelDateTime = 'تاریخ و وقت';
