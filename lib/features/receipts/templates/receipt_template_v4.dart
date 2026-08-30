@@ -435,21 +435,10 @@ class ReceiptTemplateV4 implements ReceiptTemplate {
         style: TextStyle(
           color: Colors.black,
           fontSize: size,
-          fontWeight: bold ? FontWeight.w900 : FontWeight.w600,
+          fontWeight: bold ? FontWeight.w700 : FontWeight.w600,
           height: 1.25,
-          // Naskh (sans-serif) stays readable on thermal paper; Nastaliq does not.
-          fontFamily: 'sans-serif',
-          fontFamilyFallback: const [
-            'Noto Naskh Arabic',
-            'Noto Sans Arabic',
-          ],
-          shadows: [
-            Shadow(
-              color: Colors.black,
-              offset: Offset(bold ? 0.35 : 0.2, 0),
-              blurRadius: 0,
-            ),
-          ],
+          fontFamily: 'NotoNaskhArabic',
+          fontFamilyFallback: const ['Roboto'],
         ),
       ),
       textDirection: ltr ? TextDirection.ltr : TextDirection.rtl,
