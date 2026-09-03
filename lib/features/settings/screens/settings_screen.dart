@@ -94,6 +94,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               'v2' => 'v2',
               'v3' => 'v3',
               'v4' => 'v4',
+              'v5' => 'v5',
               _ => 'v1',
             },
             decoration: const InputDecoration(labelText: 'Receipt style'),
@@ -102,6 +103,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               DropdownMenuItem(value: 'v2', child: Text('Compact (v2)')),
               DropdownMenuItem(value: 'v3', child: Text('Original (v3)')),
               DropdownMenuItem(value: 'v4', child: Text('Original clear (v4)')),
+              DropdownMenuItem(value: 'v5', child: Text('Original clear (v5)')),
             ],
             onChanged: (version) async {
               if (version == null) return;
