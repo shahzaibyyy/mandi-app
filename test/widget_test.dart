@@ -7,6 +7,7 @@ import 'package:mandi_fee_collector/features/receipts/templates/receipt_template
 import 'package:mandi_fee_collector/features/receipts/templates/receipt_template_v2.dart';
 import 'package:mandi_fee_collector/features/receipts/templates/receipt_template_v3.dart';
 import 'package:mandi_fee_collector/features/receipts/templates/receipt_template_v4.dart';
+import 'package:mandi_fee_collector/features/receipts/templates/receipt_template_v5.dart';
 
 void main() {
   test('receipt numbers are sequential and zero-padded', () {
@@ -28,11 +29,12 @@ void main() {
     );
   });
 
-  test('resolveTemplate keeps v1-v3 and adds v4', () {
+  test('resolveTemplate keeps v1-v4 and adds v5', () {
     expect(resolveTemplate('v1'), isA<ReceiptTemplateV1>());
     expect(resolveTemplate('v2'), isA<ReceiptTemplateV2>());
     expect(resolveTemplate('v3'), isA<ReceiptTemplateV3>());
     expect(resolveTemplate('v4'), isA<ReceiptTemplateV4>());
+    expect(resolveTemplate('v5'), isA<ReceiptTemplateV5>());
     expect(resolveTemplate('unknown'), isA<ReceiptTemplateV1>());
   });
 
