@@ -85,11 +85,11 @@ class ReceiptTemplateV5 implements ReceiptTemplate {
       canvas,
       y,
       widthPx,
-      rightLabel: AppConstants.labelReceiptNo,
-      rightValue: receipt.receiptNumber,
+      rightLabel: 'تاریخ',
+      rightValue: dateTime,
       rightLtr: true,
-      leftLabel: 'تاریخ',
-      leftValue: dateTime,
+      leftLabel: AppConstants.labelReceiptNo,
+      leftValue: receipt.receiptNumber,
       leftLtr: true,
     );
 
